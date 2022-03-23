@@ -19,7 +19,7 @@ class Dishdetail extends Component{
                             {c.comment}
                         </div>
                         <div className="row-content">
-                            {"-- "+c.author+" , "+c.date.slice(0,10)}
+                            {"-- "+c.author+" , "+new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(c.date)))}
                         </div>
                         <br></br>
                     </li>
@@ -54,9 +54,11 @@ class Dishdetail extends Component{
     render(){
         if(this.props.selectedDish != null){
         return(
-            <div className="row">
-            {this.renderDish(this.props.selectedDish)}
-            {this.renderComments(this.props.selectedDish.comments)}
+            <div className='container'>
+                <div className="row">
+                    {this.renderDish(this.props.selectedDish)}
+                    {this.renderComments(this.props.selectedDish.comments)}
+                </div>
             </div>)
         }else{
             return(
