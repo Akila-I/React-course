@@ -9,10 +9,10 @@ function RenderComments({comments}){
         const comm = comments.map((c)=>{
             return (
                 <li key={c.id}>
-                    <div className="row-content">
+                    <div className="row">
                         {c.comment}
                     </div>
-                    <div className="row-content">
+                    <div className="row">
                         {"-- "+c.author+" , "+new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(c.date)))}
                     </div>
                     <br></br>
