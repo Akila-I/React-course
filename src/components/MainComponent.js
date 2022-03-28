@@ -10,6 +10,7 @@ import Footer from './FooterComponent';
 import Home from './HomeComponent';
 import Contact from './ContactComponent';
 import { Route, Switch , Redirect} from 'react-router-dom';
+import About from './AboutComponent';
 
 class Main extends Component {
 
@@ -21,16 +22,8 @@ class Main extends Component {
       comments: COMMENTS,
       promotions: PROMOTIONS,
       leaders: LEADERS,
-      // selectedDish: null,
     };
   }
-
-
-  // onDishSelect(dishId){
-    // this.setState({
-        // selectedDish: dishId,
-    // });
-  // }
 
   render(){
 
@@ -46,6 +39,13 @@ class Main extends Component {
       return(
         <Menu dishes = {this.state.dishes}/>
       );
+    }
+
+    const AboutPage = ()=>{
+      return(
+        <About leaders = {this.state.leaders}/>
+      );
+
     }
 
     const DishWithId = ({match})=>{
@@ -65,6 +65,7 @@ class Main extends Component {
           <Route exact path='/menu' component={MenuPage}/>
           <Route path='/menu/:dishID' component={DishWithId}/>
           <Route exact path='/contactus' component={Contact}/>
+          <Route exact path='/aboutus' component={AboutPage}/>
           <Redirect to='/home'/>
         </Switch>
 
