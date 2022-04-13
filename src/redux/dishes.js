@@ -1,5 +1,4 @@
 import * as ActionTypes from '../redux/ActionTypes'
-import {DISHES} from '../shared/dishes';
 
 export const Dishes = (state = {
     isLoading: true,
