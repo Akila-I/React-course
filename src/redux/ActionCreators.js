@@ -148,4 +148,88 @@ export const promosLoading = () => ({
 export const promosFailed = (errMess) => ({
     type: ActionTypes.PROMOS_FAILED,
     payload: errMess
+});
+
+
+export const fetchLeaders = () => (dispatch) => {
+    dispatch(leadersLoading(true));
+
+    return fetch(baseUrl + 'leaders')
+        .then(response => {
+            if(response.ok)
+                return response
+            else{
+                var error = new Error('Error '+ response.status + ' : ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+        (error)=>{
+            var errmess = new Error (error.message);
+            throw errmess;
+        })
+        .then(response => response.json())
+        .then(leaders => dispatch(addLeaders(leaders)))
+        .catch(error => dispatch(leadersFailed(error.message)));
+}
+
+export const addLeaders = (leaders) => ({
+    type: ActionTypes.ADD_LEADERS,
+    payload: leaders
+});
+
+export const leadersLoading = () => ({
+    type: ActionTypes.LEADERS_LOADING
+});
+
+export const leadersFailed = (errMess) => ({
+    type: ActionTypes.LEADERS_FAILED,
+    payload: errMess
 })
+
+
+//no need of addFeedback function because feedbacks are not stored in redux store
+
+export const postFeedback = (firstname, lastname, telnum, email,
+                            agree, contactType, message)=> (dispatch) => {
+    //create feedback object using input parameters
+    const newFeedback = {
+        firstname: firstname,
+        lastname: lastname,
+        telnum: telnum,
+        email: email,
+        agree: agree,
+        contactType: contactType,
+        message: message
+    };
+
+    //add date to the feedback object; because the sample feedback in the server has a date field
+    newFeedback.date = new Date().toISOString();
+
+    //http post
+    return fetch(baseUrl + 'feedback' , {
+        method: "POST",
+        body: JSON.stringify(newFeedback),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+    //handle promises from fetch
+    .then(response => {
+        if(response.ok)
+            return response
+        else{
+            var error = new Error('Error '+ response.status + ' : ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    },
+    (error)=>{
+        var errmess = new Error (error.message);
+        throw errmess;
+    })
+    .then(response => response.json())
+    .then(response => alert('Thank you for your feedback! \n' + JSON.stringify(response))) //alerting the user with the response from server
+    .catch(error =>  { console.log('post feedback', error.message); alert('Your feedback could not be posted\nError: '+error.message); });
+}

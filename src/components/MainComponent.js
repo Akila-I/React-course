@@ -8,7 +8,7 @@ import Contact from './ContactComponent';
 import { Route, Switch , Redirect, withRouter} from 'react-router-dom';
 import About from './AboutComponent';
 import { connect } from 'react-redux';
-import { postComment, fetchComments, fetchDishes, fetchPromos } from '../redux/ActionCreators';
+import { postComment, postFeedback, fetchComments, fetchDishes, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 
@@ -25,8 +25,13 @@ const mapDispatchToProps = dispatch => ({
   postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
   fetchDishes: () => dispatch(fetchDishes()),
   resetFeedbackForm: ()=> {dispatch(actions.reset('feedback'))},
+  postFeedback : (firstname, lastname, telnum, email,
+                  agree, contactType, message) => 
+                  dispatch(postFeedback(firstname, lastname, telnum, email,
+                                        agree, contactType, message)),
   fetchPromos: () => dispatch(fetchPromos()),
-  fetchComments: () => dispatch(fetchComments())
+  fetchComments: () => dispatch(fetchComments()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
 });
 
 class Main extends Component {
@@ -35,17 +40,22 @@ class Main extends Component {
     this.props.fetchDishes();
     this.props.fetchPromos();
     this.props.fetchComments();
-
+    this.props.fetchLeaders();
   }
 
   render(){
 
     const HomePage = ()=>{
       return(
-        <Home dish={this.props.dishes.dishes.filter((dish)=>dish.featured)[0]}
+        <Home 
+        dish={this.props.dishes.dishes.filter((dish)=>dish.featured)[0]}
         dishesLoading = {this.props.dishes.isLoading}
         dishesErrMess = {this.props.dishes.errMess}
-        leader={this.props.leaders.filter((leader)=>leader.featured)[0]} 
+
+        leader={this.props.leaders.leaders.filter((leader)=>leader.featured)[0]}
+        leadersLoading = {this.props.leaders.isLoading}
+        leadersErrMess = {this.props.leaders.errMess}
+
         promotion={this.props.promotions.promotions.filter((promo)=>promo.featured)[0]}
         promosLoading = {this.props.promotions.isLoading}
         promosErrMess = {this.props.promotions.errMess} />
@@ -67,7 +77,7 @@ class Main extends Component {
 
     const ContactPage = ()=>{
       return(
-        <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+        <Contact resetFeedbackForm={this.props.resetFeedbackForm} postFeedback={this.props.postFeedback} />
       );
     }
 
